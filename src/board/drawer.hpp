@@ -1,0 +1,31 @@
+#ifndef __drawer_hpp__
+#define __drawer_hpp__
+
+#include <ncurses.h>
+
+class BoardHandler;
+
+#include "piece.hpp"
+
+class Drawer {
+    BoardHandler* boardHandler;
+    unsigned char size;
+    
+    WINDOW* window;
+    WINDOW* wininfo;
+
+    void drawBoard();
+    void drawInfo();
+
+    char pieceCharacter(const Piece::piece_type_enum& );
+public:
+    Drawer(BoardHandler* , const unsigned char& );
+    ~Drawer();
+
+    void drawPiece(const Piece::piece_type_enum& , const unsigned char& , const unsigned char& );
+    void drawCursor(const unsigned char& , const unsigned char& , const unsigned char& );
+
+    void run();
+};
+
+#endif // __drawer_hpp__
