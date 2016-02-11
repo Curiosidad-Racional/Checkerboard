@@ -89,7 +89,7 @@ target_link_libraries(tcp ${CMAKE_THREAD_LIBS_INIT})
 add_test(NAME Tcp COMMAND $<TARGET_FILE:tcp>)
 set_tests_properties(Tcp
                      PROPERTIES
-                     PASS_REGULAR_EXPRESSION "server recieve: Hola.*client recieve: Adios")
+                     PASS_REGULAR_EXPRESSION "server recieve: 4 3 2 1 -1 -2 -3 -4\r?\nclient recieve: 1 2 3 4 -1 -2 -3 -4")
 
 # Manual compilation
 

@@ -7,6 +7,7 @@
 #include "../src/tcp/connector.hpp"
 #include "../src/tcp/acceptor.hpp"
 
+#define READ_BUFFER_SIZE 16
 
 std::mutex cout_mutex;
 
@@ -16,11 +17,14 @@ void client() {
     Stream* stream = connector.connect(1234);
 
     if (stream) {
-        stream->send("Hola");
-        std::string msg = stream->recv(64);
+        stream->send({ 4, 3, 2, 1, -1, -2, -3, -4 });
+        std::string msg = stream->recv(READ_BUFFER_SIZE);
         {
             std::lock_guard<std::mutex> guard(cout_mutex);
-            std::cout << "client recieve: " << msg << std::endl;
+            std::cout << "client recieve:";
+            for (int i = 0; i < msg.length(); ++i)
+                std::cout << " " << (int)msg[i];
+            std::cout << std::endl;
         }
         
         delete stream;
@@ -41,12 +45,15 @@ int main(int argc, char *argv[])
 
     Stream* stream = acceptor.accept();
     if (stream) {
-        std::string msg = stream->recv(64);
+        std::string msg = stream->recv(READ_BUFFER_SIZE);
         {
             std::lock_guard<std::mutex> guard(cout_mutex);
-            std::cout << "server recieve: " << msg << std::endl;
+            std::cout << "server recieve:";
+            for (int i = 0; i < msg.length(); ++i)
+                std::cout << " " << (int)msg[i];
+            std::cout << std::endl;
         }
-        stream->send("Adios");
+        stream->send({ 1, 2, 3, 4, -1, -2, -3, -4 });
 
         delete stream;
     }

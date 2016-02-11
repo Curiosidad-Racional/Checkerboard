@@ -3,11 +3,15 @@
 #include "piece.hpp"
 
 BoardHandler::BoardHandler(Board* _board)  : board(_board) {
+
+    stream = NULL;
+    
     drawer = new Drawer(this, board->getSize());
     for (unsigned char i = 0; i < board->getSize(); i++)
         for (unsigned char j = 0; j < board->getSize(); j++) {
-            Piece* piece = board->piece(i, j);
-            if (piece != NULL) drawer->drawPiece(piece->getType(), i, j);
+            Location<unsigned char> location(board->getSize(), j, i);
+            Piece* piece = board->piece(location);
+            if (piece != NULL) drawer->drawPiece(piece->getType(), location);
         }
     
     board->setHandler(this);
@@ -24,44 +28,38 @@ void BoardHandler::run() {
 }
 
 
-void BoardHandler::update(const unsigned char& i, const unsigned char& j) {
-    Piece* piece = board->piece(i, j);
-    if (piece != NULL) drawer->drawPiece(piece->getType(), i, j);
-    else drawer->drawPiece(Piece::empty, i, j);
+void BoardHandler::update(const Location<unsigned char>& location) {
+    Piece* piece = board->piece(location);
+    if (piece != NULL) {
+        drawer->drawPiece(piece->getType(), location);
+        //if (stream != NULL) 
+    } else {
+        drawer->drawPiece(Piece::empty, location);
+        //if (stream != NULL)
+    }
 }
 
-bool BoardHandler::key(const unsigned char& key_code, const unsigned char& i, const unsigned char& j) {
-    if (board->getSize() <= i || board->getSize() <= j) return false;
+Location<unsigned char>* BoardHandler::key(const char& key_code, const Location<unsigned char> location) {
+    Piece* piece = board->piece(location);
+    if (piece == NULL) return NULL;
 
-    Piece* piece = board->piece(i, j);
-    if (piece == NULL) return false;
-
+    Location<unsigned char>* result = NULL;
     switch (key_code) {
     case 1:
-        if (piece->getColor() == Piece::black)
-            return piece->forwardLeft();
-        else
-            return piece->backwardLeft();
+        result = piece->nextLocation();
         break;
-    case 3:
-        if (piece->getColor() == Piece::black)
-            return piece->forwardRight();
-        else
-            return piece->backwardRight();
+    case 0:
+        result = piece->currLocation();
         break;
-    case 7:
-        if (piece->getColor() != Piece::black)
-            return piece->forwardLeft();
-        else
-            return piece->backwardLeft();
+    case -1:
+        result = piece->prevLocation();
         break;
-    case 9:
-        if (piece->getColor() != Piece::black)
-            return piece->forwardRight();
-        else
-            return piece->backwardRight();
+    case 100:
+        result = piece->move();
         break;
     }
 
-    return false;
+    //if (result != NULL && stream != NULL) moved();
+
+    return result;
 }

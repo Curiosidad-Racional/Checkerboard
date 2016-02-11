@@ -2,7 +2,17 @@
 
 #include "board.hpp"
 #include "boardhandler.hpp"
+#include "man.hpp"
 #include "king.hpp"
+
+
+bool Board::checkPieceLocation(Piece* _piece) {
+    if (piece(_piece->getLocation()) == _piece)
+        return true;
+    else
+        return false;
+}
+
 
 Board::Board(const unsigned char& _size) : size(_size) {
     unsigned char i, j;
@@ -19,13 +29,13 @@ Board::Board(const unsigned char& _size) : size(_size) {
     // Create pieces
     for (i = 0; i < 3; i++)
         for (j = (i+1)%2; j < size; j += 2)
-            pieces[i][j] = new Piece(Piece::black, this, j, i);
+            pieces[i][j] = new Man(Piece::black, this, Location<unsigned char>(size, j, i));
 
     // Whites
     // Create pieces
     for (i = size - 3; i < size; i++)
         for (j = (i+1)%2; j < size; j += 2)
-            pieces[i][j] = new Piece(Piece::white, this, j, i);
+            pieces[i][j] = new Man(Piece::white, this, Location<unsigned char>(size, j, i));
 }
 
 
@@ -44,42 +54,60 @@ Board::~Board() {
 }
 
 
-Piece* Board::move(Piece* piece, const unsigned char& i, const unsigned char& j) {
-    // Check dimentions
-    if (size <= i || size <= j) return 0;
+void Board::swap(Piece* piece_a, Piece* piece_b) {
+
+    Location<unsigned char> location_a = piece_a->getLocation();
+    Location<unsigned char> location_b = piece_b->getLocation();
+    piece(location_a) = piece_b;
+    piece(location_b) = piece_a;
     
-    // Check empty location
-    if (pieces[i][j] != NULL) return pieces[i][j];
-
-    pieces[i][j] = piece;
-    pieces[piece->y][piece->x] = NULL;
-    if (boardHandler != NULL) boardHandler->update(piece->y, piece->x);
-    piece->x = j; piece->y = i;
-    if (boardHandler != NULL) boardHandler->update(i, j);
-
-    return piece;
-}
-
-
-bool Board::remove(const unsigned char& i, const unsigned char& j) {
-    // Check dimentions
-    if (size <= i || size <= j) return false;
-
-    // Check empty location
-    if (pieces[i][j] != NULL) {
-        delete pieces[i][j];
-        pieces[i][j] = NULL;
-        if (boardHandler != NULL) boardHandler->update(i, j);
+    if (boardHandler != NULL) {
+        boardHandler->update(location_a);
+        boardHandler->update(location_b);
     }
 
-    return true;
+    piece_a->update(location_b);
+    piece_b->update(location_a);
+}
+
+
+void Board::move(Piece* piece_from, const Location<unsigned char>& location_to) {
+
+    Piece* piece_to = piece(location_to);
+    if (piece_to != NULL) remove(piece_to);
+
+    Location<unsigned char> location_from = piece_from->getLocation();
+    piece(location_to) = piece_from;
+    piece(location_from) = NULL;
+
+    if (boardHandler != NULL) {
+        boardHandler->update(location_to);
+        boardHandler->update(location_from);        
+    }
+
+    piece_from->update(location_to);
+}
+
+
+void Board::remove(Piece* _piece) throw(inconsistent_piece) {
+    if (_piece == NULL) return;
+    // Check piece location
+    if (!checkPieceLocation(_piece)) throw inconsistent_piece();
+
+    Location<unsigned char> location = _piece->getLocation();
+    piece(location) = NULL;
+
+    if (boardHandler != NULL)
+        boardHandler->update(location);
+    
+    delete _piece;
 }
 
 
 
-Piece* Board::piece(const unsigned char& i, const unsigned char& j) {
+Piece*& Board::piece(const Location<unsigned char>& location) throw(overboard_location) {
     // Check dimentions
-    if (size <= i || size <= j) return 0;
+    if (!(location.isValid())) throw overboard_location();
     
-    return pieces[i][j];
+    return pieces[location.getY()][location.getX()];
 }

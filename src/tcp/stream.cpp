@@ -24,7 +24,7 @@ std::string Stream::recv(size_t len)
     ssize_t readed;
     
     readed = read(asd, &buffer[0], len);
-    buffer[readed] = '\0';
+    buffer.resize(readed);
     
     return buffer;
 }
