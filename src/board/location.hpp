@@ -12,10 +12,10 @@ class Location {
     T x, y;
     bool setX(T _x) {
         
-        if (_x < size) {
-            x = _x;
+        x = _x;
+        if (_x < size)
             valid_x = true;
-        } else
+        else
             valid_x = false;
         updateValid();
         
@@ -23,10 +23,10 @@ class Location {
     }
     bool setY(T _y) {
         
-        if (_y < size) {
-            y = _y;
+        y = _y;
+        if (_y < size)
             valid_y = true;
-        } else
+        else
             valid_y = false;
         updateValid();
         

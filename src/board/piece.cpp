@@ -37,8 +37,11 @@ void Piece::update(const Location<unsigned char> location) {
 
 Location<unsigned char>* Piece::currLocation() {
     calcLocations();
-    
-    return &locations[location_index];
+
+    if (locations[location_index].isValid())
+        return &locations[location_index];
+    else
+        return nextLocation();
 }
 
 
