@@ -39,22 +39,22 @@ void BoardHandler::update(const Location<unsigned char>& location) {
     }
 }
 
-Location<unsigned char>* BoardHandler::key(const char& key_code, const Location<unsigned char> location) {
+Location<unsigned char>* BoardHandler::key(const keys key_code, const Location<unsigned char> location) {
     Piece* piece = board->piece(location);
     if (piece == NULL) return NULL;
 
     Location<unsigned char>* result = NULL;
     switch (key_code) {
-    case 1:
+    case next:
         result = piece->nextLocation();
         break;
-    case 0:
+    case current:
         result = piece->currLocation();
         break;
-    case -1:
+    case previous:
         result = piece->prevLocation();
         break;
-    case 100:
+    case move:
         result = piece->move();
         break;
     }

@@ -71,8 +71,10 @@ void Board::swap(Piece* piece_a, Piece* piece_b) {
 }
 
 
-void Board::move(Piece* piece_from, const Location<unsigned char>& location_to) {
+void Board::move(Piece* piece_from, const Location<unsigned char>& location_to) throw(void_origin) {
 
+    if (piece_from == NULL) throw void_origin();
+        
     Piece* piece_to = piece(location_to);
     if (piece_to != NULL) remove(piece_to);
 
@@ -86,6 +88,10 @@ void Board::move(Piece* piece_from, const Location<unsigned char>& location_to) 
     }
 
     piece_from->update(location_to);
+}
+
+void Board::move(Location<unsigned char>& location_from, const Location<unsigned char>& location_to) {
+    move(piece(location_from), location_to);
 }
 
 
@@ -103,6 +109,9 @@ void Board::remove(Piece* _piece) throw(inconsistent_piece) {
     delete _piece;
 }
 
+void Board::remove(Location<unsigned char>& location) {
+    remove(piece(location));
+}
 
 
 Piece*& Board::piece(const Location<unsigned char>& location) throw(overboard_location) {

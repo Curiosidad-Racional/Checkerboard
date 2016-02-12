@@ -9,12 +9,12 @@ class Board;
 
 class Piece : public Location<unsigned char> {
     friend class Board;
-    Board* board;
-
+    
     Location<unsigned char> getLocation() const;
     void update(const Location<unsigned char> );
 
 public:
+    
     enum piece_color_enum { white = -1, black = 1 };
     enum piece_type_enum { empty = -1, man_white = 1, king_white, man_black, king_black };
 
@@ -27,9 +27,13 @@ public:
     Location<unsigned char>* currLocation();
     Location<unsigned char>* nextLocation();
     Location<unsigned char>* prevLocation();
-    virtual Location<unsigned char>* move();
+    Location<unsigned char>* move();
+
 protected:
+
+    Board* board;
     virtual void calcLocations() = 0;
+    virtual bool preMove() { return true; }
     unsigned long int location_index, location_size;
     Location<unsigned char>* locations;
 

@@ -129,9 +129,9 @@ void Drawer::drawBoard() {
 
 void Drawer::drawInfo() {
     mvwprintw(wininfo, 1, 2, "Control keys");
-    mvwprintw(wininfo, 3, 5, "7 8 9");
-    mvwprintw(wininfo, 4, 5, "4   6");
-    mvwprintw(wininfo, 5, 5, "1 2 3");
+    mvwprintw(wininfo, 3, 5, "arrows");
+    mvwprintw(wininfo, 4, 5, "+ -");
+    mvwprintw(wininfo, 5, 5, "space");
     mvwprintw(wininfo, 7, 2, "Other keys");
     mvwprintw(wininfo, 9, 5, "q - quit");
     wrefresh(wininfo);
@@ -169,7 +169,7 @@ void Drawer::run() {
             drawCursor((const unsigned char)2, y, x);
             // redraw pointer to the next move
             drawCursor((const unsigned char)1, location);
-            location = boardHandler->key((const char)0, console2location(y, x));
+            location = boardHandler->key(BoardHandler::current, console2location(y, x));
             drawCursor((const unsigned char)3, location);
             // refresh
             wrefresh(window);
@@ -182,7 +182,7 @@ void Drawer::run() {
             drawCursor((const unsigned char)2, y, x);
             // redraw pointer to the next move
             drawCursor((const unsigned char)1, location);
-            location = boardHandler->key((const char)0, console2location(y, x));
+            location = boardHandler->key(BoardHandler::current, console2location(y, x));
             drawCursor((const unsigned char)3, location);
             // refresh
             wrefresh(window);
@@ -195,7 +195,7 @@ void Drawer::run() {
             drawCursor((const unsigned char)2, y, x);
             // redraw pointer to the next move
             drawCursor((const unsigned char)1, location);
-            location = boardHandler->key((const char)0, console2location(y, x));
+            location = boardHandler->key(BoardHandler::current, console2location(y, x));
             drawCursor((const unsigned char)3, location);
             // refresh
             wrefresh(window);
@@ -208,7 +208,7 @@ void Drawer::run() {
             drawCursor((const unsigned char)2, y, x);
             // redraw pointer to the next move
             drawCursor((const unsigned char)1, location);
-            location = boardHandler->key((const char)0, console2location(y, x));
+            location = boardHandler->key(BoardHandler::current, console2location(y, x));
             drawCursor((const unsigned char)3, location);
             // refresh
             wrefresh(window);
@@ -216,7 +216,7 @@ void Drawer::run() {
         case '+':
             // redraw pointer to the next move
             drawCursor((const unsigned char)1, location);
-            location = boardHandler->key((const char)1, console2location(y, x));
+            location = boardHandler->key(BoardHandler::next, console2location(y, x));
             drawCursor((const unsigned char)3, location);
             // refresh
             wrefresh(window);            
@@ -224,20 +224,21 @@ void Drawer::run() {
         case '-':
             // redraw pointer to the next move
             drawCursor((const unsigned char)1, location);
-            location = boardHandler->key((const char)-1, console2location(y, x));
+            location = boardHandler->key(BoardHandler::previous, console2location(y, x));
             drawCursor((const unsigned char)3, location);
             // refresh
             wrefresh(window);            
             break;
         case ' ':
             // redraw cursor and pointer
+            if (location == NULL) break;
             drawCursor((const unsigned char)1, y, x);
             drawCursor((const unsigned char)1, location);
-            location = boardHandler->key((const char)100, console2location(y, x));
+            location = boardHandler->key(BoardHandler::move, console2location(y, x));
             x = location->getX()*4 + 2;
             y = location->getY()*2 + 1;
             drawCursor((const unsigned char)2, location);
-            location = boardHandler->key((const char)0, *location);
+            location = boardHandler->key(BoardHandler::current, *location);
             drawCursor(3, location);
             break;
         case 'q':

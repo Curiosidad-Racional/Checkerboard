@@ -49,7 +49,7 @@ include(CTest)
 
 ##### BOARD TEST
 
-set(TEST_BOARD_FILES test/board.cpp src/board/board.cpp src/board/piece.cpp src/board/drawer.cpp src/board/boardhandler.cpp)
+set(TEST_BOARD_FILES test/board.cpp src/board/board.cpp src/board/piece.cpp src/board/drawer.cpp src/board/boardhandler.cpp src/board/man.cpp)
 
 add_executable(board ${TEST_BOARD_FILES})
 target_link_libraries(board ${CURSES_LIBRARIES})

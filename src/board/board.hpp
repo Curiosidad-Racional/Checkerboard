@@ -24,6 +24,13 @@ struct inconsistent_piece : public std::exception
   }
 };
 
+struct void_origin : public std::exception
+{
+  const char * what () const throw ()
+  {
+    return "Void origin piece exception";
+  }
+};
 
 class Board {
     const unsigned char size;
@@ -43,8 +50,10 @@ public:
     Piece*& piece(const Location<unsigned char>& ) throw(overboard_location);
 
     void swap(Piece* , Piece* );
-    void move(Piece* , const Location<unsigned char>& );
+    void move(Piece* , const Location<unsigned char>& ) throw(void_origin);
+    void move(Location<unsigned char>& , const Location<unsigned char>& );
     void remove(Piece* ) throw(inconsistent_piece);
+    void remove(Location<unsigned char>& );
 };
 
 #endif // __board_hpp__

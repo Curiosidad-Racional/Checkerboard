@@ -34,10 +34,10 @@ class Location {
     }
     void setSize(unsigned long int _size) { size = _size; }
 
-    Location() : size(0), x(0), y(0) {}
     
 public:
     
+    Location() : size(0), x(0), y(0) {}
     Location(unsigned long int _size, T _x, T _y) : size(_size) {
         setX(_x);
         setY(_y);

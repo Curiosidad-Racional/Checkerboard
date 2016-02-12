@@ -13,10 +13,12 @@ public:
     BoardHandler(Board* );
     ~BoardHandler();
 
+    enum keys { previous = -1, current = 0, next = 1, move = 100 };
+    
     void run();
     
     void update(const Location<unsigned char>& );
-    Location<unsigned char>* key(const char& , const Location<unsigned char> );
+    Location<unsigned char>* key(const keys , const Location<unsigned char> );
 
     void setStream(Stream* _stream) { stream = _stream; }
 };
