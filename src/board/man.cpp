@@ -4,15 +4,6 @@
 #include "king.hpp"
 #include "board.hpp"
 
-Piece::piece_type_enum Man::getType() const {
-    switch (piece_color) {
-    case white:
-        return man_white; 
-    case black:
-        return man_black;
-    }
-}
-
 
 void Man::calcLocations() {
     unsigned char x, y;

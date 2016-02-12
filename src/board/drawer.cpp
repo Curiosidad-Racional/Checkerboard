@@ -6,18 +6,24 @@
 
 using namespace std;
 
-char Drawer::pieceCharacter(const Piece::piece_type_enum& piece_type) {
+char Drawer::pieceCharacter(const Piece::piece_type_enum& piece_type, const Piece::piece_color_enum& piece_color) {
      switch (piece_type) {
      case Piece::empty:
             return ' ';
-     case Piece::man_white:
-         return 'o';
-     case Piece::king_white:
-         return 'O';
-     case Piece::man_black:
-            return 'x';
-     case Piece::king_black:
-            return 'X';
+     case Piece::man:
+         switch (piece_color) {
+         case Piece::white:
+             return 'o';
+         case Piece::black:
+             return 'x';
+         }
+     case Piece::king:
+         switch (piece_color) {
+         case Piece::white:
+             return 'O';
+         case Piece::black:
+             return 'X';
+         }
      }
 }
 
@@ -138,9 +144,9 @@ void Drawer::drawInfo() {
 }
 
 
-void Drawer::drawPiece(const Piece::piece_type_enum& piece_type, const unsigned char& i, const unsigned char& j) {
+void Drawer::drawPiece(const Piece::piece_type_enum& piece_type, const Piece::piece_color_enum& piece_color, const unsigned char& i, const unsigned char& j) {
     wmove(window, i, j);
-    waddch(window, pieceCharacter(piece_type));
+    waddch(window, pieceCharacter(piece_type, piece_color));
     wrefresh(window);
 }
 
@@ -240,6 +246,8 @@ void Drawer::run() {
             drawCursor((const unsigned char)2, location);
             location = boardHandler->key(BoardHandler::current, *location);
             drawCursor(3, location);
+            // refresh
+            wrefresh(window);            
             break;
         case 'q':
             return;

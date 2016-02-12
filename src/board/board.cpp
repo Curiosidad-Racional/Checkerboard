@@ -123,7 +123,7 @@ void Board::remove(Piece* _piece) throw(inconsistent_piece) {
     delete _piece;
 }
 
-void Board::remove(Location<unsigned char>& location) {
+void Board::remove(const Location<unsigned char>& location) {
     remove(piece(location));
 }
 

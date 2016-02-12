@@ -15,7 +15,7 @@ public:
     }
 
     
-    piece_type_enum getType() const;
+    piece_type_enum getType() const { return king; }
 
     void calcLocations();
     bool preMove();

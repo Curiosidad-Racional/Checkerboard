@@ -15,8 +15,8 @@ class Piece : public Location<unsigned char> {
 
 public:
     
-    enum piece_color_enum { white = -1, black = 1 };
-    enum piece_type_enum { empty = -1, man_white = 1, king_white, man_black, king_black };
+    enum piece_color_enum { white = -1, undefined = 0, black = 1 };
+    enum piece_type_enum { empty = 10, man, king };
 
     Piece(const piece_color_enum& _piece_color, Board* _board, const Location<unsigned char>& _location, const unsigned char& _n);
     virtual ~Piece();

@@ -62,7 +62,7 @@ public:
     void move(Piece* , const Location<unsigned char>& ) throw(void_origin);
     void move(Location<unsigned char>& , const Location<unsigned char>& );
     void remove(Piece* ) throw(inconsistent_piece);
-    void remove(Location<unsigned char>& );
+    void remove(const Location<unsigned char>& );
 };
 
 #endif // __board_hpp__

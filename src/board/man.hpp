@@ -17,7 +17,7 @@ public:
     }
     ~Man() {}
 
-    piece_type_enum getType() const;
+    piece_type_enum getType() const { return man; }
 
     void calcLocations();
     bool preMove();
