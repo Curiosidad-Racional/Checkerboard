@@ -2,20 +2,9 @@
 #define __piece_hpp__
 
 
-#include <exception>
-
 class Board;
 
 #include "location.hpp"
-
-
-struct infinite_loop : public std::exception
-{
-  const char * what () const throw ()
-  {
-    return "Infinite loop exception";
-  }
-};
 
 
 class Piece : public Location<unsigned char> {
@@ -36,8 +25,8 @@ public:
     virtual piece_type_enum getType() const = 0;
 
     Location<unsigned char>* currLocation();
-    Location<unsigned char>* nextLocation() throw(infinite_loop);
-    Location<unsigned char>* prevLocation() throw(infinite_loop);
+    Location<unsigned char>* nextLocation();
+    Location<unsigned char>* prevLocation();
     virtual Location<unsigned char>* move();
 protected:
     virtual void calcLocations() = 0;

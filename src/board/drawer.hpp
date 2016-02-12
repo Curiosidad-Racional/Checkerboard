@@ -37,9 +37,6 @@ public:
     void drawCursor(const unsigned char& , const unsigned char& , const unsigned char&  );
 
     void run();
-
-    ////// delme
-    void reached() { mvwprintw(wininfo, 0, 0, "REACHED");wrefresh(wininfo); }
 };
 
 #endif // __drawer_hpp__

@@ -45,27 +45,33 @@ Location<unsigned char>* Piece::currLocation() {
 }
 
 
-Location<unsigned char>* Piece::nextLocation() throw(infinite_loop) {
+Location<unsigned char>* Piece::nextLocation() {
     unsigned long int initial_value = location_index;
 
     do {
         location_index = (++location_index)%location_size;
-        if (location_index == initial_value) throw infinite_loop();
+        if (location_index == initial_value) break;
     } while (!locations[location_index].isValid());
     
-    return &locations[location_index];
+    if (locations[location_index].isValid())
+        return &locations[location_index];
+    else
+        return NULL;
 }
 
 
-Location<unsigned char>* Piece::prevLocation() throw(infinite_loop) {
+Location<unsigned char>* Piece::prevLocation() {
     unsigned long int initial_value = location_index;
 
     do {
         location_index = (--location_index)%location_size;
-        if (location_index == initial_value) throw infinite_loop();
+        if (location_index == initial_value) break;
     } while (!locations[location_index].isValid());
     
-    return &locations[location_index];
+    if (locations[location_index].isValid())
+        return &locations[location_index];
+    else
+        return NULL;
 }
 
 

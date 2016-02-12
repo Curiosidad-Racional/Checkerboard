@@ -54,6 +54,10 @@ set(TEST_BOARD_FILES test/board.cpp src/board/board.cpp src/board/piece.cpp src/
 add_executable(board ${TEST_BOARD_FILES})
 target_link_libraries(board ${CURSES_LIBRARIES})
 
+add_test(NAME Board COMMAND sh -c "echo q | $<TARGET_FILE:board>")
+set_tests_properties(Board
+                     PROPERTIES
+                     FAIL_REGULAR_EXPRESSION "error")
 
 # Manual compilation
 
