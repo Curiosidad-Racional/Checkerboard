@@ -4,28 +4,21 @@
 #include "piece.hpp"
 
 class King : public Piece {
+    bool eat[4];
+    Location<unsigned char> eat_locations[4];
+
 public:
+    
     King(const piece_color_enum& _piece_color, Board* _board, const Location<unsigned char>& _location)
         : Piece(_piece_color, _board, _location, 4) {
         calcLocations();
     }
 
     
-    piece_type_enum getType() const {
-        switch (piece_color) {
-        case white:
-            return king_white; 
-        case black:
-            return king_black;
-        }
-    }
+    piece_type_enum getType() const;
 
-    void calcLocations() {
-        locations[0] = Location(getSize(), getX() + 1, getY() + 1);
-        locations[1] = Location(getSize(), getX() + 1, getY() - 1);
-        locations[2] = Location(getSize(), getX() - 1, getY() + 1);
-        locations[3] = Location(getSize(), getX() - 1, getY() - 1);
-    }
+    void calcLocations();
+    bool preMove();
 
 };
 

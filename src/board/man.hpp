@@ -21,6 +21,7 @@ public:
 
     void calcLocations();
     bool preMove();
+    Location<unsigned char>* postMove();
 
 };
 

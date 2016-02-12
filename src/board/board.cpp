@@ -53,6 +53,20 @@ Board::~Board() {
     delete[] pieces;
 }
 
+void Board::put(Piece* _piece) throw(void_piece) {
+
+    if (_piece == NULL) throw void_piece();
+
+    Location<unsigned char> location = _piece->getLocation();
+    Piece* piece_to = piece(location);
+    if (piece_to != NULL) remove(piece_to);
+
+    piece(location) = _piece;
+
+    if (boardHandler != NULL) {
+        boardHandler->update(location);  
+    }    
+}
 
 void Board::swap(Piece* piece_a, Piece* piece_b) {
 
@@ -74,7 +88,7 @@ void Board::swap(Piece* piece_a, Piece* piece_b) {
 void Board::move(Piece* piece_from, const Location<unsigned char>& location_to) throw(void_origin) {
 
     if (piece_from == NULL) throw void_origin();
-        
+
     Piece* piece_to = piece(location_to);
     if (piece_to != NULL) remove(piece_to);
 
@@ -116,7 +130,10 @@ void Board::remove(Location<unsigned char>& location) {
 
 Piece*& Board::piece(const Location<unsigned char>& location) throw(overboard_location) {
     // Check dimentions
-    if (!(location.isValid())) throw overboard_location();
+    if (!location.isValid()) {
+//        debug(location.getX(), location.getY());
+        throw overboard_location();
+    }
     
     return pieces[location.getY()][location.getX()];
 }

@@ -79,7 +79,8 @@ Location<unsigned char>* Piece::move() {
     if (!locations[location_index].isValid()) return NULL;
 
     if (!preMove()) return NULL;
-    
+
     board->move(this, locations[location_index]);
-    return this;
+    
+    return postMove();
 }

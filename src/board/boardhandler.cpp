@@ -2,6 +2,7 @@
 #include "boardhandler.hpp"
 #include "piece.hpp"
 
+
 BoardHandler::BoardHandler(Board* _board)  : board(_board) {
 
     stream = NULL;

@@ -32,6 +32,14 @@ struct void_origin : public std::exception
   }
 };
 
+struct void_piece : public std::exception
+{
+  const char * what () const throw ()
+  {
+    return "Void piece exception";
+  }
+};
+
 class Board {
     const unsigned char size;
     Piece*** pieces;
@@ -49,6 +57,7 @@ public:
 
     Piece*& piece(const Location<unsigned char>& ) throw(overboard_location);
 
+    void put(Piece* _piece) throw(void_piece);
     void swap(Piece* , Piece* );
     void move(Piece* , const Location<unsigned char>& ) throw(void_origin);
     void move(Location<unsigned char>& , const Location<unsigned char>& );

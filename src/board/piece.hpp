@@ -34,6 +34,7 @@ protected:
     Board* board;
     virtual void calcLocations() = 0;
     virtual bool preMove() { return true; }
+    virtual Location<unsigned char>* postMove() { return this; }
     unsigned long int location_index, location_size;
     Location<unsigned char>* locations;
 

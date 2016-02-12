@@ -1,6 +1,7 @@
 #include <cstddef>
 
 #include "man.hpp"
+#include "king.hpp"
 #include "board.hpp"
 
 Piece::piece_type_enum Man::getType() const {
@@ -39,14 +40,17 @@ void Man::calcLocations() {
                     x += - 1 + 2*i;
                     y += dy;
                     Location<unsigned char> location(getSize(), x, y);
-                    piece = board->piece(location);
-                    if (piece != NULL)
-                        locations[i] = Location<unsigned char>(getSize(), -1, -1);
-                    else {
-                        eat[i] = true;
-                        eat_locations[i] = locations[i];
+                    if (location.isValid()) {
+                        piece = board->piece(location);
+                        if (piece != NULL)
+                            locations[i] = Location<unsigned char>(getSize(), -1, -1);
+                        else {
+                            eat[i] = true;
+                            eat_locations[i] = locations[i];
+                            locations[i] = location;
+                        }
+                    } else
                         locations[i] = location;
-                    }
                 }
             }                
         }
@@ -59,4 +63,15 @@ bool Man::preMove() {
     if (eat[location_index]) board->remove(eat_locations[location_index]);
 
     return true;
+}
+
+
+Location<unsigned char>* Man::postMove() {
+
+    if (piece_color == white && getY() == 0) {
+        King* king = new King(piece_color, board, (Location<unsigned char>)*this);
+        board->put(king);
+        return king;
+    } else
+        return this;
 }
