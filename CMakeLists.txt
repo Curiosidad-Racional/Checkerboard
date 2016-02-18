@@ -31,7 +31,7 @@ message(STATUS "Runtime output directory: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
 ##########  PROJECT BINARIES  ##########
 
-add_executable(client src/client.cpp src/board/piece.cpp src/board/board.cpp src/board/drawer.cpp src/board/boardhandler.cpp src/tcp/stream.cpp src/tcp/connector.cpp)
+add_executable(client src/client.cpp src/board/piece.cpp src/board/man.cpp src/board/king.cpp src/board/board.cpp src/board/drawer.cpp src/board/boardhandler.cpp src/tcp/stream.cpp src/tcp/connector.cpp)
 
 message(STATUS "Added client binary")
 
