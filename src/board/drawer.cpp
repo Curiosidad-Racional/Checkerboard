@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <string>
 #include <iostream>
 
 #include "drawer.hpp"
@@ -28,7 +29,7 @@ char Drawer::pieceCharacter(const Piece::piece_type_enum& piece_type, const Piec
 }
 
 Drawer::Drawer(BoardHandler * _boardHandler, const unsigned char& _size)
-    : boardHandler(_boardHandler), size(_size) {
+    : y(1), x(2), location(NULL), boardHandler(_boardHandler), size(_size) {
     if ( (window = initscr()) == NULL ) {
 	cerr << "error: main window startup.\n";
 	exit(EXIT_FAILURE);
@@ -59,6 +60,7 @@ Drawer::Drawer(BoardHandler * _boardHandler, const unsigned char& _size)
 
     drawBoard();
     drawInfo();
+    drawCursor(2, y, x);
 }
 
 
@@ -156,101 +158,102 @@ void Drawer::drawCursor(const unsigned char& color,  const unsigned char& i, con
     mvwaddch(window, i, j, current_char | COLOR_PAIR(color));
 }    
 
+void Drawer::drawMessage(const std::string msg) {
+    mvwprintw(window, 14, 35, msg_clear.c_str());
+    mvwprintw(window, 14, 35, msg.c_str());
+    wrefresh(window);
+    msg_clear.resize(msg.length(), ' ');
+}
 
-void Drawer::run() {
-    // pointer to the next move
-    Location<unsigned char>* location = NULL;
-    // cursor position
-    unsigned char y = 1, x = 2;
-    drawCursor(2, y, x);
+char Drawer::keyboard() {
 
-
-    while(true) {
-        switch (wgetch(window)) {
-        case KEY_LEFT:
-            if (x < 4) break;
-            // redraw cursor in new position
-            drawCursor((const unsigned char)1, y, x);
-            x -= 4;
-            drawCursor((const unsigned char)2, y, x);
-            // redraw pointer to the next move
-            drawCursor((const unsigned char)1, location);
-            location = boardHandler->key(BoardHandler::current, console2location(y, x));
-            drawCursor((const unsigned char)3, location);
-            // refresh
-            wrefresh(window);
-            break;
-        case KEY_RIGHT:
-            if (x > 4*size - 6) break;
-            // redraw cursor in new position
-            drawCursor((const unsigned char)1, y, x);
-            x += 4;
-            drawCursor((const unsigned char)2, y, x);
-            // redraw pointer to the next move
-            drawCursor((const unsigned char)1, location);
-            location = boardHandler->key(BoardHandler::current, console2location(y, x));
-            drawCursor((const unsigned char)3, location);
-            // refresh
-            wrefresh(window);
-            break;
-        case KEY_UP:
-            if (y < 2) break;
-            // redraw cursor in new position
-            drawCursor((const unsigned char)1, y, x);
-            y -= 2;
-            drawCursor((const unsigned char)2, y, x);
-            // redraw pointer to the next move
-            drawCursor((const unsigned char)1, location);
-            location = boardHandler->key(BoardHandler::current, console2location(y, x));
-            drawCursor((const unsigned char)3, location);
-            // refresh
-            wrefresh(window);
-            break;
-        case KEY_DOWN:
-            if (y > 2*size - 3) break;
-            // redraw cursor in new position
-            drawCursor((const unsigned char)1, y, x);
-            y += 2;
-            drawCursor((const unsigned char)2, y, x);
-            // redraw pointer to the next move
-            drawCursor((const unsigned char)1, location);
-            location = boardHandler->key(BoardHandler::current, console2location(y, x));
-            drawCursor((const unsigned char)3, location);
-            // refresh
-            wrefresh(window);
-            break;
-        case '+':
-            // redraw pointer to the next move
-            drawCursor((const unsigned char)1, location);
-            location = boardHandler->key(BoardHandler::next, console2location(y, x));
-            drawCursor((const unsigned char)3, location);
-            // refresh
-            wrefresh(window);            
-            break;
-        case '-':
-            // redraw pointer to the next move
-            drawCursor((const unsigned char)1, location);
-            location = boardHandler->key(BoardHandler::previous, console2location(y, x));
-            drawCursor((const unsigned char)3, location);
-            // refresh
-            wrefresh(window);            
-            break;
-        case ' ':
-            // redraw cursor and pointer
-            if (location == NULL) break;
-            drawCursor((const unsigned char)1, y, x);
-            drawCursor((const unsigned char)1, location);
-            location = boardHandler->key(BoardHandler::move, console2location(y, x));
-            x = location->getX()*4 + 2;
-            y = location->getY()*2 + 1;
-            drawCursor((const unsigned char)2, location);
-            location = boardHandler->key(BoardHandler::current, *location);
-            drawCursor(3, location);
-            // refresh
-            wrefresh(window);            
-            break;
-        case 'q':
-            return;
-        }
+    switch (wgetch(window)) {
+    case KEY_LEFT:
+        if (x < 4) break;
+        // redraw cursor in new position
+        drawCursor((const unsigned char)1, y, x);
+        x -= 4;
+        drawCursor((const unsigned char)2, y, x);
+        // redraw pointer to the next move
+        drawCursor((const unsigned char)1, location);
+        location = boardHandler->key(BoardHandler::current, console2location(y, x));
+        drawCursor((const unsigned char)3, location);
+        // refresh
+        wrefresh(window);
+        break;
+    case KEY_RIGHT:
+        if (x > 4*size - 6) break;
+        // redraw cursor in new position
+        drawCursor((const unsigned char)1, y, x);
+        x += 4;
+        drawCursor((const unsigned char)2, y, x);
+        // redraw pointer to the next move
+        drawCursor((const unsigned char)1, location);
+        location = boardHandler->key(BoardHandler::current, console2location(y, x));
+        drawCursor((const unsigned char)3, location);
+        // refresh
+        wrefresh(window);
+        break;
+    case KEY_UP:
+        if (y < 2) break;
+        // redraw cursor in new position
+        drawCursor((const unsigned char)1, y, x);
+        y -= 2;
+        drawCursor((const unsigned char)2, y, x);
+        // redraw pointer to the next move
+        drawCursor((const unsigned char)1, location);
+        location = boardHandler->key(BoardHandler::current, console2location(y, x));
+        drawCursor((const unsigned char)3, location);
+        // refresh
+        wrefresh(window);
+        break;
+    case KEY_DOWN:
+        if (y > 2*size - 3) break;
+        // redraw cursor in new position
+        drawCursor((const unsigned char)1, y, x);
+        y += 2;
+        drawCursor((const unsigned char)2, y, x);
+        // redraw pointer to the next move
+        drawCursor((const unsigned char)1, location);
+        location = boardHandler->key(BoardHandler::current, console2location(y, x));
+        drawCursor((const unsigned char)3, location);
+        // refresh
+        wrefresh(window);
+        break;
+    case '+':
+        // redraw pointer to the next move
+        drawCursor((const unsigned char)1, location);
+        location = boardHandler->key(BoardHandler::next, console2location(y, x));
+        drawCursor((const unsigned char)3, location);
+        // refresh
+        wrefresh(window);            
+        break;
+    case '-':
+        // redraw pointer to the next move
+        drawCursor((const unsigned char)1, location);
+        location = boardHandler->key(BoardHandler::previous, console2location(y, x));
+        drawCursor((const unsigned char)3, location);
+        // refresh
+        wrefresh(window);            
+        break;
+    case ' ':
+        // redraw cursor and pointer
+        if (location == NULL) break;
+        drawCursor((const unsigned char)1, y, x);
+        drawCursor((const unsigned char)1, location);
+        location = boardHandler->key(BoardHandler::move, console2location(y, x));
+        x = location->getX()*4 + 2;
+        y = location->getY()*2 + 1;
+        drawCursor((const unsigned char)2, location);
+        location = boardHandler->key(BoardHandler::current, *location);
+        drawCursor(3, location);
+        // refresh
+        wrefresh(window);            
+        break;
+    case 'q':
+        return 'q';
     }
+
+    return '\0';
+
 }

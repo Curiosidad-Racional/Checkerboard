@@ -18,6 +18,7 @@ struct wrong_piece_type : public std::exception
 
 
 class BoardHandler {
+    bool main_loop;
     Piece::piece_color_enum handler_color;
     std::string message;
     Board* board;

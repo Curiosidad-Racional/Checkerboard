@@ -24,7 +24,10 @@ void function_thread(SharedQueue<PointersStack<Stream>* >& queue) {
     while (queue.alive()) {
         {
             std::lock_guard<std::mutex> lockGuard(cout_mutex);
-            std::cout << "Thread " << tid << " starting game" << std::endl;
+            std::cout << "Thread "
+                      << std::hex << std::uppercase << tid
+                      << std::nouppercase << std::dec
+                      << " starting game" << std::endl;
         }
         
         stack = queue.subtract();
@@ -43,7 +46,10 @@ void function_thread(SharedQueue<PointersStack<Stream>* >& queue) {
             if (msg.length() < 1) break; // end of stream
             {
                 std::lock_guard<std::mutex> lockGuard(cout_mutex);
-                std::cout << "Thread " << tid << " white -> black";
+                std::cout << "Thread "
+                          << std::hex << std::uppercase << tid
+                          << std::nouppercase << std::dec
+                          << " white -> black";
                 for (int i = 0; i < msg.length(); ++i)
                     std::cout << " " << (int)msg[i];
                 std::cout << std::endl;
@@ -54,7 +60,10 @@ void function_thread(SharedQueue<PointersStack<Stream>* >& queue) {
             if (msg.length() < 1) break; // end of stream
             {
                 std::lock_guard<std::mutex> lockGuard(cout_mutex);
-                std::cout << "Thread " << tid << " black -> white";
+                std::cout << "Thread "
+                          << std::hex << std::uppercase << tid
+                          << std::nouppercase << std::dec
+                          << " black -> white";
                 for (int i = 0; i < msg.length(); ++i)
                     std::cout << " " << (int)msg[i];
                 std::cout << std::endl;
@@ -111,13 +120,13 @@ int main(int argc, char** argv)
         do {
             connection0 = acceptor.accept();
         } while (connection0 == NULL);
-        std::cout << "Connection 1 of 2 accepted" << std::endl;
+        std::cout << "Server: connection 1 of 2 accepted" << std::endl;
 
         Stream* connection1;
         do {
             connection1 = acceptor.accept();
         } while (connection1 == NULL);
-        std::cout << "Connection 2 of 2 accepted" << std::endl;
+        std::cout << "Server: connection 2 of 2 accepted" << std::endl;
 
         queue.add(new PointersStack<Stream> (connection0, connection1));
         

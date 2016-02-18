@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <string>
-#include <iostream>
 
 
 #include "boardhandler.hpp"
@@ -20,11 +19,13 @@ void BoardHandler::sendOpponent() {
 void BoardHandler::waitOpponent() throw(wrong_piece_type) {
     if (stream == NULL) return;
 
+    drawer->drawMessage("Waiting opponent...");
+
     std::string msg = stream->recv(64);
 
     if (msg.length() == 0) {
-        std::cerr << "error: connection broken" << std::endl;
-        exit(0);
+        main_loop = false;
+        return;
     }
 
     Stream* stream_tmp = stream;
@@ -56,10 +57,13 @@ void BoardHandler::waitOpponent() throw(wrong_piece_type) {
         }
     }
     stream = stream_tmp;
+
+    drawer->drawMessage("");
 }
 
 
-BoardHandler::BoardHandler(Board* _board) : message(""), board(_board) {
+BoardHandler::BoardHandler(Board* _board)
+    : main_loop(true), message(""), board(_board) {
     stream = NULL;
     
     drawer = new Drawer(this, board->getSize());
@@ -86,7 +90,8 @@ BoardHandler::~BoardHandler()  {
 void BoardHandler::run() {
     if (handler_color == Piece::black) waitOpponent();
 
-    drawer->run();
+    while (main_loop)
+        if (drawer->keyboard() == 'q') break;
 }
 
 

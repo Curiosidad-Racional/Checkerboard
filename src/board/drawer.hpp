@@ -8,6 +8,13 @@ class BoardHandler;
 #include "piece.hpp"
 
 class Drawer {
+    // pointer to the next move
+    Location<unsigned char>* location;
+    // cursor position
+    unsigned char y, x;
+
+    std::string msg_clear;
+
     BoardHandler* boardHandler;
     unsigned char size;
     
@@ -35,8 +42,9 @@ public:
 
     void drawPiece(const Piece::piece_type_enum& , const Piece::piece_color_enum& , const unsigned char& , const unsigned char& );
     void drawCursor(const unsigned char& , const unsigned char& , const unsigned char&  );
+    void drawMessage(const std::string );
 
-    void run();
+    char keyboard();
 };
 
 #endif // __drawer_hpp__
