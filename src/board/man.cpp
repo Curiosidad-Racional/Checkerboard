@@ -63,6 +63,10 @@ Location<unsigned char>* Man::postMove() {
         King* king = new King(piece_color, board, (Location<unsigned char>)*this);
         board->put(king);
         return king;
+    } else if (piece_color == black && getY() == getSize() - 1) {
+        King* king = new King(piece_color, board, (Location<unsigned char>)*this);
+        board->put(king);
+        return king;        
     } else
         return this;
 }

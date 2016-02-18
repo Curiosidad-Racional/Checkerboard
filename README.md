@@ -18,7 +18,7 @@ make
 
 ## Running
 
-Within project folder (no build folder).
+Within project folder (no `build` folder).
 
 ### Server
 
